@@ -858,7 +858,18 @@ export default class SyncManager {
           // on them if it makes the plugin handle upload better on certain devices.
           if (hasTextExtension(filePath)) {
             const sha = await this.calculateSHA(filePath);
-            this.metadataStore.data.files[filePath].sha = sha;
+            if (this.metadataStore.data.files[filePath]) {
+              this.metadataStore.data.files[filePath].sha = sha;
+            } else {
+              this.metadataStore.data.files[filePath] = {
+                path: filePath,
+                sha: sha,
+                dirty: false,
+                justDownloaded: false,
+                lastModified: syncTime,
+                deleted: false,
+              };
+            }
             return;
           }
 
@@ -875,7 +886,18 @@ export default class SyncManager {
           treeFiles[filePath].sha = sha;
           // Can't have both sha and content set, so we delete it
           delete treeFiles[filePath].content;
-          this.metadataStore.data.files[filePath].sha = sha;
+          if (this.metadataStore.data.files[filePath]) {
+            this.metadataStore.data.files[filePath].sha = sha;
+          } else {
+            this.metadataStore.data.files[filePath] = {
+              path: filePath,
+              sha: sha,
+              dirty: false,
+              justDownloaded: false,
+              lastModified: syncTime,
+              deleted: false,
+            };
+          }
         }),
     );
 
