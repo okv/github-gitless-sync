@@ -71,6 +71,7 @@ export default class EventsListener {
       return;
     }
 
+    if (!this.metadataStore.data.files[filePath]) return;
     this.metadataStore.data.files[filePath].deleted = true;
     this.metadataStore.data.files[filePath].deletedAt = Date.now();
     await this.metadataStore.save();

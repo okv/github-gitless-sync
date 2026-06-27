@@ -561,8 +561,10 @@ export default class SyncManager {
       ...actions
         .filter((action) => action.type === "download")
         .map(async (action: SyncAction) => {
+          const file = files[action.filePath];
+          if (!file) return; // tree and manifest are stale (file removed from GitHub)
           await this.downloadFile(
-            files[action.filePath],
+            file,
             remoteMetadata.files[action.filePath].lastModified,
           );
         }),
